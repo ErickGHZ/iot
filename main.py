@@ -11,8 +11,7 @@ conn = sqlite3.connect("iot.db")
 app = fastapi.FastAPI()
 
 origins = [
-    "http://localhost:8080",
-    "https://heroku-mysql-frontend-ac0fa64dec05.herokuapp.com",
+    "http://localhost:8080"
 ]
 
 app.add_middleware(
