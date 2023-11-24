@@ -29,16 +29,9 @@ class iot(BaseModel):
     dispositivo : str
     valor : int
 
-@app.post("/dispositivos")
-async def crear_dispositivo(iot: iot):
-        c = conn.cursor()
-        c.execute('INSERT INTO iot (id, dispositivo, valor) VALUES (?, ?, ?)',
-                  (iot.id, iot.dispositivo, iot.valor))
-        conn.commit()
-        
-        return iot
 
-@app.get("/dispositivos")
+
+@app.get("/")
 async def obtener_dispositivos():
     """Obtiene todos los contactos."""
     # TODO Consulta todos los contactos de la base de datos y los envia en un JSON
@@ -51,32 +44,38 @@ async def obtener_dispositivos():
     return response
 
 
-@app.get("/dispositivos/{id}")
+
+
+@app.get("/iot/{id}")
 async def obtener_dispositivo(id: int):
-    """Obtiene un contacto por su email."""
-    # Consulta el contacto por su email
+    """Obtiene un dispositivo por su ID."""
+    # Consulta el dispositivo por su ID
     c = conn.cursor()
     c.execute('SELECT * FROM iot WHERE id = ?', (id,))
-    iot = None
-    for row in c:
-        iot = {"id":row[0],"dispositivo":row[1],"valor":row[2]}
-    return iot
+    row = c.fetchone()
+
+    if row is not None:
+      
+        valor = row[2]
+        return valor
+    else:
+        
+        return -1
 
 
-@app.put("/dispositivos/{id}")
-async def actualizar_dispositivo(id: int, iot: iot):
-    """Actualiza un contacto."""
+
+@app.put("/iot/{id}/{valor}")
+async def actualizar_dispositivo(id: int, valor: int):
+    """Actualiza un dispositivo."""
+    # Consulta el dispositivo por su ID antes de la actualización
     c = conn.cursor()
-    c.execute('UPDATE iot SET dispositivo = ?, valor = ? WHERE id = ?',
-              (iot.dispositivo, iot.valor, id))
-    conn.commit()
-    return iot
+    c.execute('SELECT * FROM iot WHERE id = ?', (id,))
+    row = c.fetchone()
 
-@app.delete("/dispositivo/{id}")
-async def eliminar_dispositivo(id: int):
-    """Elimina un contacto."""
-    # TODO Elimina el contacto de la base de datos
-    c = conn.cursor()
-    c.execute('DELETE FROM iot WHERE id = ?', (id,))
-    conn.commit()
-    return {"mensaje":"Contacto eliminado"}
+    if row is not None:
+        # Si se encuentra el dispositivo, realiza la actualización
+        c.execute('UPDATE iot SET valor = ? WHERE id = ?', (valor, id))
+        conn.commit()
+        return valor
+    else:
+        return -1
