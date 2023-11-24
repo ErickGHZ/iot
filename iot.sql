@@ -4,8 +4,5 @@ CREATE TABLE iot (
     valor INT
 );
 
-INSERT INTO contactos (id, dispostivo, valor)
-VALUES (1, "led", 0);
-
-INSERT INTO contactos (id, dispostivo, valor)
-VALUES (1, "sensor", 0);
+INSERT INTO iot (id, dispositivo, valor) VALUES (1, 'led', 0);
+INSERT INTO iot (id, dispositivo, valor) VALUES (2, 'sensor', 0);
