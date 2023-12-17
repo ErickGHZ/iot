@@ -1,2 +1,1 @@
-# iot
-base de datos para iot
+# Base de datos para iot
